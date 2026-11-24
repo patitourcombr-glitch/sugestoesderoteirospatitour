@@ -22,3 +22,26 @@ export interface RouteCardProps {
   title: string;
   subtitle: string;
 }
+
+export type ItineraryCategory =
+  | 'maternal'
+  | 'fundamental1'
+  | 'fundamental2'
+  | 'ensinoMedio';
+
+export interface ItineraryItem {
+  id?: string;
+  title: string;
+  description: string;
+  site: string;
+  category: ItineraryCategory;
+  createdAt?: unknown;
+  updatedAt?: unknown;
+}
+
+export const CATEGORY_LABELS: Record<ItineraryCategory, string> = {
+  maternal: 'Maternal/Jd 1 & 2',
+  fundamental1: 'Fundamental 1',
+  fundamental2: 'Fundamental 2',
+  ensinoMedio: 'Ensino Médio',
+};

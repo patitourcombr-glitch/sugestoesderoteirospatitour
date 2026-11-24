@@ -1,0 +1,76 @@
+{
+  "entities": {
+    "Itinerary": {
+      "title": "Itinerary",
+      "description": "Pedagogical trip destination or itinerary item displayed in a grade category.",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Name of the destination and city/state.",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "description": {
+          "type": "string",
+          "description": "Pedagogical summary of the destination.",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "site": {
+          "type": "string",
+          "description": "Optional official website URL (http or https).",
+          "maxLength": 500
+        },
+        "category": {
+          "type": "string",
+          "description": "Grade level category.",
+          "enum": ["maternal", "fundamental1", "fundamental2", "ensinoMedio"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp."
+        }
+      },
+      "required": ["title", "description", "site", "category", "createdAt", "updatedAt"]
+    },
+    "AdminConfig": {
+      "title": "AdminConfig",
+      "description": "Salted SHA-256 hash for the admin passcode lock screen.",
+      "type": "object",
+      "properties": {
+        "salt": {
+          "type": "string",
+          "minLength": 32,
+          "maxLength": 32
+        },
+        "hash": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["salt", "hash", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/itineraries/{itineraryId}": {
+      "schema": { "$ref": "#/entities/Itinerary" },
+      "description": "Collection of pedagogical itineraries managed via /#/admin and displayed publicly."
+    },
+    "/config/admin": {
+      "schema": { "$ref": "#/entities/AdminConfig" },
+      "description": "One-time claimed admin passcode hash."
+    }
+  }
+}

@@ -1,0 +1,84 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string &&
+        id.size() >= 1 &&
+        id.size() <= 128 &&
+        id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidCategory(category) {
+      return category in ['maternal', 'fundamental1', 'fundamental2', 'ensinoMedio'];
+    }
+
+    function isValidSite(site) {
+      return site is string &&
+        site.size() <= 500 &&
+        (site == '' || site.matches('^https?://.*'));
+    }
+
+    function hasValidItineraryFields(data) {
+      return data.title is string &&
+        data.title.size() >= 1 &&
+        data.title.size() <= 200 &&
+        data.description is string &&
+        data.description.size() >= 1 &&
+        data.description.size() <= 1000 &&
+        isValidSite(data.site) &&
+        isValidCategory(data.category) &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidItineraryCreate(data) {
+      return data.keys().hasAll(['title', 'description', 'site', 'category', 'createdAt', 'updatedAt']) &&
+        data.keys().hasOnly(['title', 'description', 'site', 'category', 'createdAt', 'updatedAt']) &&
+        hasValidItineraryFields(data) &&
+        data.createdAt is timestamp;
+    }
+
+    function isValidItineraryUpdate(data) {
+      return hasValidItineraryFields(data) &&
+        data.diff(resource.data).affectedKeys().hasOnly(['title', 'description', 'site', 'category', 'updatedAt']);
+    }
+
+    function isValidAdminConfig(data) {
+      return data.keys().hasAll(['salt', 'hash', 'createdAt']) &&
+        data.keys().hasOnly(['salt', 'hash', 'createdAt']) &&
+        data.salt is string &&
+        data.salt.size() == 32 &&
+        data.hash is string &&
+        data.hash.size() == 64 &&
+        data.createdAt is timestamp;
+    }
+
+    match /itineraries/{itineraryId} {
+      // Leitura pública dos roteiros para escolas e professores
+      allow list: if true;
+      allow get: if isValidId(itineraryId);
+
+      // Escrita liberada para sessão autenticada (incluindo Autenticação Anônima)
+      allow create: if isAuthenticated() && isValidId(itineraryId) && isValidItineraryCreate(request.resource.data);
+      allow update: if isAuthenticated() && isValidId(itineraryId) && isValidItineraryUpdate(request.resource.data);
+      allow delete: if isAuthenticated() && isValidId(itineraryId);
+    }
+
+    match /config/admin {
+      allow get: if isAuthenticated();
+      allow list: if false;
+      allow create: if isAuthenticated() &&
+        !exists(/databases/$(database)/documents/config/admin) &&
+        isValidAdminConfig(request.resource.data);
+      allow update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

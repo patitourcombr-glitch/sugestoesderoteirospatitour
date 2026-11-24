@@ -1,12 +1,7 @@
 import React from 'react';
-import { 
-  ArrowLeft, 
-  Check, 
-  MapPin, 
-  Globe, 
-  MessageCircle,
-  Smile
-} from 'lucide-react';
+import { ArrowLeft, Check, MessageCircle, Smile } from 'lucide-react';
+import { useCategoryItineraries } from '../hooks/useCategoryItineraries';
+import ItineraryGrid from '../components/ItineraryGrid';
 
 interface MaternalPageProps {
   onBack: () => void;
@@ -15,109 +10,7 @@ interface MaternalPageProps {
 const MaternalPage: React.FC<MaternalPageProps> = ({ onBack }) => {
   const whatsappNumber = "5519997474575";
   const defaultImageUrl = "https://a.lovart.ai/artifacts/agent/OcGkBKwNTEGYQqnN.png";
-
-  const itineraries = [
-    {
-      title: "Aquário de São Paulo (São Paulo, SP)",
-      description: "Uma viagem ao fundo do mar. Tanques gigantes, pinguins e ursos polares encantam os alunos e ensinam sobre a vida marinha e conservação.",
-      site: "https://www.aquariodesp.com.br/"
-    },
-    {
-      title: "Biblioteca de Americana (Americana, SP)",
-      description: "Um universo de histórias e imaginação. A visita estimula o gosto pela leitura desde cedo, apresentando o ambiente da biblioteca de forma lúdica e acolhedora.",
-      site: "https://bibliotecadeamericana.com/"
-    },
-    {
-      title: "Cidade do Livro (São Paulo, SP)",
-      description: "Um parque temático onde os livros ganham vida. Cenários interativos e personagens conduzem as crianças por aventuras literárias inesquecíveis.",
-      site: "https://www.cidadedolivro.com.br/novo/"
-    },
-    {
-      title: "Ecologic Park (Charqueada, SP)",
-      description: "Imersão total na natureza com foco na era jurássica e ecologia. Atividades pedagógicas que misturam ciência, história e diversão ao ar livre.",
-      site: "https://acampark.com.br/educadores/"
-    },
-    {
-      title: "Editora Adonis (Americana, SP)",
-      description: "Como nasce um livro? Uma visita mágica aos bastidores da criação literária, inspirando futuros leitores e escritores a valorizarem o papel e a escrita.",
-      site: "https://www.editoraadonis.com.br/"
-    },
-    {
-      title: "Fazenda Apiário Belmonte (Sousas, SP)",
-      description: "O mundo das abelhas! As crianças aprendem sobre polinização, a vida na colmeia e a produção de mel com segurança e didática especializada.",
-      site: "https://www.facebook.com/fazendabelmonte/"
-    },
-    {
-      title: "Horta Day Luz (Americana, SP)",
-      description: "Uma experiência sensorial incrível onde as crianças aprendem sobre a origem dos alimentos, o cultivo orgânico e a importância da natureza, colocando as mãos na terra.",
-      site: "https://www.dayluz.com.br/contato"
-    },
-    {
-      title: "Jardim Botânico Plantarum (Nova Odessa, SP)",
-      description: "Um centro de referência em pesquisa e conservação da flora brasileira. Um passeio visualmente deslumbrante que ensina a importância das plantas.",
-      site: "https://www.plantarum.org.br/"
-    },
-    {
-      title: "Jota City (Atibaia, SP)",
-      description: "Uma cidade feita para crianças! Conceitos de cidadania, economia e profissões são apresentados em uma minicidade totalmente interativa.",
-      site: "http://jotacity.com.br/"
-    },
-    {
-      title: "Laticínios Tavolaro (Brotas, SP)",
-      description: "Descubra de onde vem o leite e o queijo! As crianças vivenciam o dia a dia da fazenda, conhecem os animais e aprendem sobre produção de alimentos de forma divertida.",
-      site: "https://www.facebook.com/laticiniostavolaro/?locale=pt_BR"
-    },
-    {
-      title: "Maria Fumaça (Campinas, SP)",
-      description: "Uma viagem no tempo sobre trilhos! O passeio de trem encanta as crianças e apresenta a história ferroviária da região de maneira nostálgica e emocionante.",
-      site: "https://www.mariafumacacampinas.com.br/fale-conosco/"
-    },
-    {
-      title: "Museu da Imaginação (São Paulo, SP)",
-      description: "Arte e brincadeira se fundem. Espaços interativos que estimulam a criatividade, a coordenação e a expressão artística das crianças.",
-      site: "https://www.museudaimaginacao.com.br/"
-    },
-    {
-      title: "Parque Aimarata (Americana, SP)",
-      description: "Contato direto com a biodiversidade local. Trilhas leves e seguras permitem que os pequenos explorem a fauna e flora, desenvolvendo respeito pelo meio ambiente.",
-      site: "https://aimarata.org.br/tabela-de-precos/"
-    },
-    {
-      title: "Parque da Mônica (São Paulo, SP)",
-      description: "Encontro com os personagens mais amados do Brasil. Atrações lúdicas e seguras que trabalham a amizade e a diversão em grupo.",
-      site: "https://parquedamonica.com.br/"
-    },
-    {
-      title: "Planetário Taquaral (Campinas, SP)",
-      description: "Uma introdução fascinante à astronomia. Projeções adaptadas para os pequenos mostram as estrelas e planetas, despertando a curiosidade sobre o universo.",
-      site: "https://conheca.campinas.sp.gov.br/pois/301"
-    },
-    {
-      title: "Recanto Lago dos Sonhos (Valinhos, SP)",
-      description: "Natureza e animais em harmonia. Vivências rurais que aproximam a criança do campo, com atividades de alimentação dos animais e horticultura.",
-      site: "https://recantolagodossonhos.com.br/"
-    },
-    {
-      title: "Recanto São José (Mogi Mirim, SP)",
-      description: "Espaço dedicado ao lazer educativo e convivência. Perfeito para atividades de socialização e brincadeiras dirigidas em meio à natureza.",
-      site: ""
-    },
-    {
-      title: "Sítio Sassafraz (Itupeva, SP)",
-      description: "Turismo rural autêntico. As crianças colhem frutas, interagem com animais da fazenda e experimentam a vida no campo com simplicidade e alegria.",
-      site: "https://sitiosassafraz.com.br/"
-    },
-    {
-      title: "Terra dos Gigantes / Fazenda Ituaú (Salto, SP)",
-      description: "O mundo dos legumes gigantes. Uma aula curiosa e visual sobre botânica e horticultura tecnológica, que encanta os pequenos com seu tamanho.",
-      site: "https://fazendaituau.com.br/"
-    },
-    {
-      title: "Zooparque (Itatiba, SP)",
-      description: "O maior zoológico particular do Brasil. Uma sala de aula a céu aberto para conhecer animais de diversos biomas e aprender sobre preservação.",
-      site: "https://zooparque.com.br/"
-    }
-  ].sort((a, b) => a.title.localeCompare(b.title));
+  const { items: itineraries } = useCategoryItineraries('maternal');
 
   const handleWhatsAppClick = (itineraryTitle?: string) => {
     let message = `Olá, Pati! Vi os roteiros de Maternal & Jardim e gostaria de mais informações.`;
@@ -125,7 +18,7 @@ const MaternalPage: React.FC<MaternalPageProps> = ({ onBack }) => {
       message = `Olá, Pati! Me interessei pelo roteiro "${itineraryTitle}" (Maternal) e gostaria de um orçamento.`;
     }
     const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -203,7 +96,6 @@ const MaternalPage: React.FC<MaternalPageProps> = ({ onBack }) => {
                 <span className="font-bold">Mais de 20 anos de experiência</span>
               </div>
             </div>
-            {/* Background decoration */}
             <div className="absolute -right-10 -bottom-10 bg-orange-100 rounded-full w-40 h-40 opacity-40"></div>
           </div>
         </div>
@@ -243,38 +135,7 @@ const MaternalPage: React.FC<MaternalPageProps> = ({ onBack }) => {
 
       {/* Cards Grid */}
       <div className="max-w-7xl mx-auto px-4 md:px-6 pb-16 md:pb-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {itineraries.map((item, idx) => (
-            <div key={idx} className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-1 flex flex-col h-full group">
-              <div className="bg-[#4d6b56] p-3 rounded-xl w-fit mb-6 text-white group-hover:bg-primary transition-colors duration-300 shadow-lg">
-                <MapPin size={24} />
-              </div>
-              
-              <h4 className="text-primary font-bold text-lg mb-3 md:mb-4 leading-tight min-h-[3rem]">{item.title}</h4>
-              <p className="text-gray-400 text-xs leading-relaxed mb-8 flex-1 font-semibold opacity-90">
-                {item.description}
-              </p>
-
-              <div className="flex flex-col gap-3 mt-auto">
-                <button 
-                  onClick={() => item.site && window.open(item.site, '_blank')}
-                  disabled={!item.site}
-                  className={`flex items-center justify-center gap-2 border-2 border-gray-100 py-3 px-4 rounded-xl text-[11px] font-bold uppercase transition-all ${item.site ? 'text-gray-500 hover:bg-gray-50 hover:border-gray-200 active:scale-95' : 'text-gray-200 cursor-not-allowed'}`}
-                >
-                  <Globe size={16} />
-                  SITE
-                </button>
-                <button 
-                  onClick={() => handleWhatsAppClick(item.title)}
-                  className="flex items-center justify-center gap-2 bg-[#1a4d2e] text-white py-3 px-4 rounded-xl text-[11px] font-bold uppercase hover:bg-primary-light active:scale-95 transition-all shadow-md shadow-primary/20"
-                >
-                  <MessageCircle size={16} />
-                  QUERO ESSE
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <ItineraryGrid items={itineraries} onSelectItinerary={handleWhatsAppClick} />
       </div>
 
       {/* Footer CTA */}

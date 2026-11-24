@@ -12,7 +12,6 @@ import {
   Phone, 
   Mail, 
   MapPin,
-  Bus,
   Users,
   Target,
   Accessibility
@@ -475,10 +474,12 @@ const HomePage: React.FC<HomePageProps> = ({ setActiveTab }) => {
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             {/* Left: Brand & Slogan */}
             <div className="flex flex-col items-center md:items-start gap-2">
-              <div className="flex items-center gap-4">
-                <div className="bg-[#1a4d2e] p-2 rounded-lg shadow-inner">
-                  <Bus size={22} className="text-white" />
-                </div>
+              <div className="flex items-center gap-3">
+                <img
+                  src="https://raw.githubusercontent.com/easybyzcreator/imagens/454a1719078a34dbeb3e2284c72977c52d246f3c/logo%20patitour%20-%20fundo%20transp.png"
+                  alt="Logo Pati Tour"
+                  className="w-12 h-12 object-contain flex-shrink-0"
+                />
                 <div>
                   <h2 className="text-lg font-black uppercase tracking-tight font-display">PATI TOUR</h2>
                   <p className="text-[9px] text-[#f4d03f] font-black uppercase tracking-[0.2em] -mt-1">TURISMO PEDAGÓGICO</p>
